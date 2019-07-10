@@ -5,5 +5,5 @@ Tested on Chrome and Firefox browsers!
 
 ## To play game
 1) Simply download / clone repository<br>
-2) Open file simple_guess_game_mf.html with Chrome or Firefox<br>
-3) See how many moves it takes you to ge the winning square!<br>
+2) Open file "simple_guess_game_mf.html" with Chrome or Firefox browser<br>
+3) See how many moves it takes you to get the winning square!<br>
