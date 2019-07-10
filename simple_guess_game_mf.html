@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            button:hover{background-color: aqua}
+        </style>
+    </head>
+    <body>
+       <h3>Select option to
+            <select id="user_selection" onchange="user_input()">
+                    <option value="1" selected>Change game size</option>			
+                    <option value="2">2 by 2 squares</option>
+                    <option value="3">3 by 3 squares</option>
+                    <option value="4">4 by 4 squares</option>
+                    <option value="5">5 by 5 squares</option>                    
+					<option value="0"></option>
+            </select>
+       </h3>
+       <h4><i><font color="red">Click on any square to start playing game!</font></i></h4>
+       <p id="demo"></p>
+
+        <script>
+            function user_input() {
+                var y = document.getElementById("user_selection").value;
+                sessionStorage.setItem("user_selection", y);
+                retrieved = sessionStorage.getItem("user_selection");
+                document.getElementById('user_selection').getElementsByTagName('option')[y].selected = 'selected';
+                location.reload();
+                document.getElementById('user_selection').getElementsByTagName('option')[retrieved].selected = 'selected';
+                return Number(y);
+            }            
+			
+			var session = sessionStorage.getItem("user_selection")
+			
+			var game_size;
+			
+			if (!session || session == 0 || session == 1) {
+				game_size = 3;
+			}
+			else {
+				game_size = session;
+				}
+
+            var no_of_squares = game_size * game_size;
+    
+            function winning_square () {
+                var random = Math.ceil(Math.random() * no_of_squares);
+                return random;
+            }
+
+            var winning_square = winning_square();
+
+            var button_id =1;
+
+            var x = 0;
+            var css_correction = -Math.abs(game_size * 50);
+
+            for (var row = 0; row < game_size; row++) {
+
+                for (var col = 0; col < game_size; col++) {
+                    var row_pixel_position = row*50;
+                    var col_pixel_position = col*50;
+
+                    var row_pixel_position_string = row_pixel_position.toString() + 'px';
+                    var col_pixel_position_string = row_pixel_position.toString() + 'px';
+
+                    var new_button = document.createElement('button');
+                    new_button.style.cssText = "width: 50px; height: 50px; position: relative";
+                    new_button.style.top = row_pixel_position_string;  
+                    new_button.style.left = col_pixel_position_string;   
+                    new_button.setAttribute('id',button_id);
+                    new_button.setAttribute('row',row_pixel_position);
+                    new_button.setAttribute('col',col_pixel_position);
+                    new_button.setAttribute('onclick','check_user_selection(this)');                
+                    document.body.appendChild(new_button);                    
+                    button_id++;   
+                    if (row >= 0 && row < game_size){
+                        new_button.style.left = x + 'px';
+                    }
+                }   
+                x += css_correction;
+            }
+
+            var no_of_moves = 0;         
+        
+            function check_user_selection(square) {
+                var user_selection = Number(square.getAttribute('id'));
+
+                if (user_selection === winning_square) {
+                    no_of_moves++;
+                    if (no_of_moves === 1) {
+                        alert("You win! \n Game completed in " + no_of_moves + " move" );
+                    }
+                    else {
+                        alert("You win! \n Game completed in " + no_of_moves + " moves" );
+                    }
+                    
+
+                    if (confirm("Click OK to play again? Or CANCEL to leave page")) {
+                        location.reload();
+                    } 
+                    else {
+                        window.location.href = "https://www.google.com";
+                    }
+                }
+                
+
+                if (user_selection !== winning_square) {
+                    no_of_moves++;
+                    var winning_square_row = document.getElementById(winning_square.toString()).getAttribute('row');
+                    var winning_square_col = document.getElementById(winning_square.toString()).getAttribute('col');
+
+                    var user_selection_row = Number(square.getAttribute('row'));
+                    var user_selection_col = Number(square.getAttribute('col'));
+ 
+                    var row_diff = Math.abs(user_selection_row - winning_square_row)/50;
+                    var col_diff = Math.abs(user_selection_col - winning_square_col)/50;
+					
+                    var distance_from_winning_square = Math.max(row_diff,col_diff);
+
+                    var css = 'table td:hover{ background-color: #00ff00 }';
+                    var style = document.createElement('style');
+
+                    alert("TRY AGAIN!! Distance from winning square: " + distance_from_winning_square);
+                }                
+            }      
+        </script>
+    </body>
+</html>
